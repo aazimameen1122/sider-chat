@@ -3,6 +3,11 @@
 // it directly. The user's key arrives in the Authorization header and is
 // only forwarded — never stored or logged.
 export default async function handler(req, res) {
+  // CORS: allow the GitHub Pages copy of the site to use this proxy.
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'authorization, content-type');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'GET') {
     return res.status(405).json({ error: { message: 'Method not allowed' } });
   }
