@@ -256,6 +256,9 @@ keyEl.value = localStorage.getItem('sider_api_key') || '';
 keyEl.addEventListener('change', () => localStorage.setItem('sider_api_key', keyEl.value.trim()));
 modelEl.value = localStorage.getItem('sider_model') || 'deepseek-4.1-unrestricted';
 modelEl.addEventListener('change', () => localStorage.setItem('sider_model', modelEl.value));
+/* On GitHub Pages there is no local proxy, so calls go to the Vercel
+   deployment of this same repo (its api/ functions allow CORS). */
+const API_BASE = location.hostname.endsWith('github.io') ? 'https://sider-chat.vercel.app' : '';
 function headers(){ return {'Content-Type':'application/json','Authorization':'Bearer ' + keyEl.value.trim()}; }
 function setStatus(text, cls){ statusText.textContent = text; statusDot.className = 'dot' + (cls ? ' ' + cls : ''); }
 function friendlyError(status, body){
@@ -270,7 +273,7 @@ async function testConnection(){
   if (!keyEl.value.trim()){ setStatus('Paste your key first', 'err'); return; }
   setStatus('Testing…');
   try{
-    const res = await fetch('/api/models', {headers: headers()});
+    const res = await fetch(API_BASE + '/api/models', {headers: headers()});
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(friendlyError(res.status, data));
     const ids = (data.data || []).map(m => m.id);
@@ -303,7 +306,7 @@ async function send(){
     const payload = [];
     if (sysEl.value.trim()) payload.push({role:'system', content: sysEl.value.trim()});
     payload.push(...chat.messages);
-    const res = await fetch('/api/chat', {method:'POST', headers: headers(),
+    const res = await fetch(API_BASE + '/api/chat', {method:'POST', headers: headers(),
       body: JSON.stringify({model: modelEl.value, messages: payload})});
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(friendlyError(res.status, data));
