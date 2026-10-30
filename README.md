@@ -4,6 +4,10 @@ A simple website to chat with the [Sider AI API](https://sider.ai.id/v1) — an
 OpenAI-compatible API. Paste your own Sider API key in the page, pick a model,
 and chat.
 
+**Live:**
+- Vercel: https://sider-chat.vercel.app
+- GitHub Pages: https://aazimameen1122.github.io/sider-chat/
+
 **Models available on this API:** `deepseek-4.1-unrestricted` (default),
 `gemini-3.1-pro`, `gemini-3.8-flash`, `glm-5.3-unrestricted`.
 
@@ -35,11 +39,15 @@ Then open http://localhost:8000, paste your key, and hit **Test connection**.
    and the `api/` functions automatically
 3. Open your deployed URL, paste your key, chat
 
-## Note on GitHub Pages
+## GitHub Pages
 
-GitHub Pages can host the page itself, but chat will **not** work there —
-Pages has no server side, and Sider's missing CORS headers block direct
-browser calls. Use the local server or Vercel deploy above for a working chat.
+This repo is also served by GitHub Pages at
+https://aazimameen1122.github.io/sider-chat/ — and chat works there too.
+Pages itself has no server side, so when the page is opened from the
+`github.io` domain it automatically sends its API calls to the Vercel
+deployment of this same repo (`https://sider-chat.vercel.app`), whose
+`api/` functions allow cross-origin calls. Everywhere else (Vercel, local
+server) the page uses its own same-origin proxy.
 
 ## Files
 
